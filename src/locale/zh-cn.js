@@ -22,7 +22,7 @@ export default {
     freeze: '冻结',
     autofilter: '自动筛选',
     formula: '函数',
-    more: '更多',
+    more: '更多'
   },
   contextmenu: {
     copy: '复制',
@@ -42,15 +42,15 @@ export default {
     cellprintable: '可打印',
     cellnonprintable: '不可打印',
     celleditable: '可编辑',
-    cellnoneditable: '不可编辑',
+    cellnoneditable: '不可编辑'
   },
   print: {
     size: '纸张大小',
     orientation: '方向',
-    orientations: ['横向', '纵向'],
+    orientations: ['横向', '纵向']
   },
   format: {
-    normal: '正常',
+    normal: '自动',
     text: '文本',
     number: '数值',
     percent: '百分比',
@@ -60,7 +60,7 @@ export default {
     date: '短日期',
     time: '时间',
     datetime: '长日期',
-    duration: '持续时间',
+    duration: '持续时间'
   },
   formula: {
     sum: '求和',
@@ -70,7 +70,7 @@ export default {
     concat: '字符拼接',
     _if: '条件判断',
     and: '和',
-    or: '或',
+    or: '或'
   },
   validation: {
     required: '此值必填',
@@ -83,28 +83,41 @@ export default {
     lessThan: '此值应该小于 {}',
     lessThanEqual: '此值应该小于等于 {}',
     greaterThan: '此值应该大于 {}',
-    greaterThanEqual: '此值应该大于等于 {}',
+    greaterThanEqual: '此值应该大于等于 {}'
   },
   error: {
-    pasteForMergedCell: '无法对合并的单元格执行此操作',
+    pasteForMergedCell: '无法对合并的单元格执行此操作'
   },
   calendar: {
     weeks: ['日', '一', '二', '三', '四', '五', '六'],
-    months: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
+    months: [
+      '一月',
+      '二月',
+      '三月',
+      '四月',
+      '五月',
+      '六月',
+      '七月',
+      '八月',
+      '九月',
+      '十月',
+      '十一月',
+      '十二月'
+    ]
   },
   button: {
     next: '下一步',
     cancel: '取消',
     remove: '删除',
     save: '保存',
-    ok: '确认',
+    ok: '确认'
   },
   sort: {
     desc: '降序',
-    asc: '升序',
+    asc: '升序'
   },
   filter: {
-    empty: '空白',
+    empty: '空白'
   },
   dataValidation: {
     mode: '模式',
@@ -113,14 +126,14 @@ export default {
     modeType: {
       cell: '单元格',
       column: '列模式',
-      row: '行模式',
+      row: '行模式'
     },
     type: {
       list: '列表',
       number: '数字',
       date: '日期',
       phone: '手机号',
-      email: '电子邮件',
+      email: '电子邮件'
     },
     operator: {
       be: '在区间',
@@ -130,7 +143,7 @@ export default {
       gt: '大于',
       gte: '大于等于',
       eq: '等于',
-      neq: '不等于',
-    },
-  },
+      neq: '不等于'
+    }
+  }
 };
