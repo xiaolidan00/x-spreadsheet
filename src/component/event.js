@@ -18,7 +18,7 @@ export function unbindClickoutside(el) {
 export function bindClickoutside(el, cb) {
   el.xclickoutside = (evt) => {
     // ignore double click
-    // console.log('evt:', evt);
+    console.log('evt:', evt);
     if (evt.detail === 2 || el.contains(evt.target)) return;
     if (cb) cb(el);
     else {
@@ -91,16 +91,12 @@ export function createEventEmitter() {
   function on(eventName, callback) {
     const push = () => {
       const currentListener = listeners.get(eventName);
-      return (Array.isArray(currentListener)
-          && currentListener.push(callback))
-          || false;
+      return (Array.isArray(currentListener) && currentListener.push(callback)) || false;
     };
 
     const create = () => listeners.set(eventName, [].concat(callback));
 
-    return (listeners.has(eventName)
-        && push())
-        || create();
+    return (listeners.has(eventName) && push()) || create();
   }
 
   function fire(eventName, args) {
@@ -109,22 +105,22 @@ export function createEventEmitter() {
       for (const callback of currentListener) callback.call(null, ...args);
     };
 
-    return listeners.has(eventName)
-        && exec();
+    return listeners.has(eventName) && exec();
   }
 
   function removeListener(eventName, callback) {
     const remove = () => {
       const currentListener = listeners.get(eventName);
       const idx = currentListener.indexOf(callback);
-      return (idx >= 0)
-          && currentListener.splice(idx, 1)
-          && listeners.get(eventName).length === 0
-          && listeners.delete(eventName);
+      return (
+        idx >= 0 &&
+        currentListener.splice(idx, 1) &&
+        listeners.get(eventName).length === 0 &&
+        listeners.delete(eventName)
+      );
     };
 
-    return listeners.has(eventName)
-        && remove();
+    return listeners.has(eventName) && remove();
   }
 
   function once(eventName, callback) {
@@ -148,6 +144,6 @@ export function createEventEmitter() {
     once,
     fire,
     removeListener,
-    removeAllListeners,
+    removeAllListeners
   };
 }

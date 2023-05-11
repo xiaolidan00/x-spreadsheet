@@ -1,10 +1,10 @@
 /* global window */
-import en from './en';
+import zh from './zh-cn';
 
-// Defines the fallback language as English
-let $languages = ['en'];
+// Defines the fallback language as 中文
+let $languages = ['zh'];
 const $messages = {
-  en,
+  zh
 };
 
 function translate(key, messages) {
@@ -70,11 +70,7 @@ function locale(lang, message, clearLangList = false) {
 }
 
 export default {
-  t,
+  t
 };
 
-export {
-  locale,
-  t,
-  tf,
-};
+export { locale, t, tf };

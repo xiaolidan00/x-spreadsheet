@@ -19,53 +19,85 @@ const menuItems = [
   { key: 'hide', title: tf('contextmenu.hide') },
   { key: 'divider' },
   { key: 'validation', title: tf('contextmenu.validation') },
-  { key: 'divider' },
-  { key: 'cell-printable', title: tf('contextmenu.cellprintable') },
-  { key: 'cell-non-printable', title: tf('contextmenu.cellnonprintable') },
+  // { key: 'divider' },
+  // { key: 'cell-printable', title: tf('contextmenu.cellprintable') },
+  // { key: 'cell-non-printable', title: tf('contextmenu.cellnonprintable') },
   { key: 'divider' },
   { key: 'cell-editable', title: tf('contextmenu.celleditable') },
-  { key: 'cell-non-editable', title: tf('contextmenu.cellnoneditable') },
+  { key: 'cell-non-editable', title: tf('contextmenu.cellnoneditable') }
 ];
 
 function buildMenuItem(item) {
   if (item.key === 'divider') {
     return h('div', `${cssPrefix}-item divider`);
   }
+
   return h('div', `${cssPrefix}-item`)
     .on('click', () => {
       this.itemClick(item.key);
       this.hide();
     })
-    .children(
-      item.title(),
-      h('div', 'label').child(item.label || ''),
-    );
+    .children(item.title(), h('div', 'label').child(item.label || ''));
 }
 
 function buildMenu() {
-  return menuItems.map(it => buildMenuItem.call(this, it));
+  return menuItems.map((it) => buildMenuItem.call(this, it));
 }
 
 export default class ContextMenu {
   constructor(viewFn, isHide = false) {
+    console.log(this);
     this.menuItems = buildMenu.call(this);
+
     this.el = h('div', `${cssPrefix}-contextmenu`)
       .children(...this.menuItems)
       .hide();
     this.viewFn = viewFn;
     this.itemClick = () => {};
     this.isHide = isHide;
-    this.setMode('range');
+    // this.setMode('range');
   }
 
   // row-col: the whole rows or the whole cols
   // range: select range
-  setMode(mode) {
+  setMode(mode, selectCell) {
+    console.log(mode, selectCell);
     const hideEl = this.menuItems[12];
     if (mode === 'row-col') {
       hideEl.show();
     } else {
+      //range
       hideEl.hide();
+    }
+    if (Array.isArray(selectCell) && selectCell.length) {
+      let count = 0;
+      for (let i = 0; i < selectCell.length; i++) {
+        if (selectCell[i] && selectCell[i].editable === false) {
+          count++;
+        }
+      }
+      if (count == 0) {
+        this.setEditable(true);
+      } else if (count == selectCell.length) {
+        this.setEditable(false);
+      } else {
+        this.setEditable(false);
+      }
+    }
+  }
+  setEditable(enable) {
+    if (!enable) {
+      let nonEdit = this.menuItems.findIndex((item) => item.el.innerText == '不可编辑');
+      this.menuItems[nonEdit].hide();
+
+      let edit = this.menuItems.findIndex((item) => item.el.innerText == '可编辑');
+      this.menuItems[edit].show();
+    } else {
+      let nonEdit = this.menuItems.findIndex((item) => item.el.innerText == '不可编辑');
+      this.menuItems[nonEdit].show();
+
+      let edit = this.menuItems.findIndex((item) => item.el.innerText == '可编辑');
+      this.menuItems[edit].hide();
     }
   }
 

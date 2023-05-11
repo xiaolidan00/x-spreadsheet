@@ -31,9 +31,7 @@ class DrawBox {
     this.borderLeft = null;
   }
 
-  setBorders({
-    top, bottom, left, right,
-  }) {
+  setBorders({ top, bottom, left, right }) {
     if (top) this.borderTop = top;
     if (right) this.borderRight = right;
     if (bottom) this.borderBottom = bottom;
@@ -41,11 +39,11 @@ class DrawBox {
   }
 
   innerWidth() {
-    return this.width - (this.padding * 2) - 2;
+    return this.width - this.padding * 2 - 2;
   }
 
   innerHeight() {
-    return this.height - (this.padding * 2) - 2;
+    return this.height - this.padding * 2 - 2;
   }
 
   textx(align) {
@@ -76,28 +74,34 @@ class DrawBox {
 
   topxys() {
     const { x, y, width } = this;
-    return [[x, y], [x + width, y]];
+    return [
+      [x, y],
+      [x + width, y]
+    ];
   }
 
   rightxys() {
-    const {
-      x, y, width, height,
-    } = this;
-    return [[x + width, y], [x + width, y + height]];
+    const { x, y, width, height } = this;
+    return [
+      [x + width, y],
+      [x + width, y + height]
+    ];
   }
 
   bottomxys() {
-    const {
-      x, y, width, height,
-    } = this;
-    return [[x, y + height], [x + width, y + height]];
+    const { x, y, width, height } = this;
+    return [
+      [x, y + height],
+      [x + width, y + height]
+    ];
   }
 
   leftxys() {
-    const {
-      x, y, height,
-    } = this;
-    return [[x, y], [x, y + height]];
+    const { x, y, height } = this;
+    return [
+      [x, y],
+      [x, y + height]
+    ];
   }
 }
 
@@ -115,7 +119,7 @@ function drawFontLine(type, tx, ty, align, valign, blheight, blwidth) {
     if (valign === 'bottom') {
       floffset.y = blheight / 2;
     } else if (valign === 'top') {
-      floffset.y = -((blheight / 2) + 2);
+      floffset.y = -(blheight / 2 + 2);
     }
   }
 
@@ -124,10 +128,7 @@ function drawFontLine(type, tx, ty, align, valign, blheight, blwidth) {
   } else if (align === 'right') {
     floffset.x = blwidth;
   }
-  this.line(
-    [tx - floffset.x, ty - floffset.y],
-    [tx - floffset.x + blwidth, ty - floffset.y],
-  );
+  this.line([tx - floffset.x, ty - floffset.y], [tx - floffset.x + blwidth, ty - floffset.y]);
 }
 
 class Draw {
@@ -217,18 +218,18 @@ class Draw {
   */
   text(mtxt, box, attr = {}, textWrap = true) {
     const { ctx } = this;
-    const {
-      align, valign, font, color, strike, underline,
-    } = attr;
+    const { align, valign, font, color, strike, underline } = attr;
     const tx = box.textx(align);
     ctx.save();
     ctx.beginPath();
     this.attr({
       textAlign: align,
       textBaseline: valign,
-      font: `${font.italic ? 'italic' : ''} ${font.bold ? 'bold' : ''} ${npx(font.size)}px ${font.name}`,
+      font: `${font.italic ? 'italic' : ''} ${font.bold ? 'bold' : ''} ${npx(font.size)}px ${
+        font.name
+      }`,
       fillStyle: color,
-      strokeStyle: color,
+      strokeStyle: color
     });
     const txts = `${mtxt}`.split('\n');
     const biw = box.innerWidth();
@@ -307,9 +308,7 @@ class Draw {
     const { ctx } = this;
     ctx.save();
     // border
-    const {
-      borderTop, borderRight, borderBottom, borderLeft,
-    } = box;
+    const { borderTop, borderRight, borderBottom, borderLeft } = box;
     if (borderTop) {
       this.border(...borderTop);
       // console.log('box.topxys:', box.topxys());
@@ -332,9 +331,7 @@ class Draw {
 
   dropdown(box) {
     const { ctx } = this;
-    const {
-      x, y, width, height,
-    } = box;
+    const { x, y, width, height } = box;
     const sx = x + width - 15;
     const sy = y + height - 15;
     ctx.save();
@@ -373,16 +370,14 @@ class Draw {
     ctx.lineTo(npx(sx), npx(y - 1));
     ctx.lineTo(npx(sx), npx(y + 8));
     ctx.closePath();
-    ctx.fillStyle = 'rgba(0, 255, 0, .85)';
+    ctx.fillStyle = 'rgba(0,0,0,0.5)'; // 'rgba(0, 255, 0, .85)';
     ctx.fill();
     ctx.restore();
   }
 
   rect(box, dtextcb) {
     const { ctx } = this;
-    const {
-      x, y, width, height, bgcolor,
-    } = box;
+    const { x, y, width, height, bgcolor } = box;
     ctx.save();
     ctx.beginPath();
     ctx.fillStyle = bgcolor || '#fff';
@@ -395,9 +390,4 @@ class Draw {
 }
 
 export default {};
-export {
-  Draw,
-  DrawBox,
-  thinLineWidth,
-  npx,
-};
+export { Draw, DrawBox, thinLineWidth, npx };
