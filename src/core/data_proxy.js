@@ -137,9 +137,9 @@ function copyPaste(srcCellRange, dstCellRange, what, autofill = false) {
   }
   rows.copyPaste(srcCellRange, dstCellRange, what, autofill, (ri, ci, cell) => {
     if (cell && cell.merge) {
-      // console.log('cell:', ri, ci, cell);
       const [rn, cn] = cell.merge;
       if (rn <= 0 && cn <= 0) return;
+      console.log('merges');
       merges.add(new CellRange(ri, ci, ri + rn, ci + cn));
     }
   });
@@ -511,13 +511,51 @@ export default class DataProxy {
       });
     }
   }
-
+  getRangeCells(range) {
+    let selectCell = [];
+    if (range) {
+      for (let i = range.sri; i <= range.eri; i++) {
+        for (let j = range.sci; j <= range.eci; j++) {
+          selectCell.push(this.getCell(i, j));
+        }
+      }
+    }
+    return selectCell;
+  }
   autofill(cellRange, what, error = () => {}) {
     const srcRange = this.selector.range;
-    if (!canPaste.call(this, srcRange, cellRange, error)) return false;
-    this.changeData(() => {
-      copyPaste.call(this, srcRange, cellRange, what, true);
-    });
+    const srcCells = this.getRangeCells(srcRange);
+    let count = 0;
+    let vals = [];
+    for (let i = 0; i < srcCells.length; i++) {
+      if (srcCells[i] && !Number.isNaN(Number(srcCells[i].text))) {
+        count++;
+        vals.push(Number(srcCells[i].text));
+      }
+    }
+    //填充类容为数字类型
+    if (count == srcCells.length) {
+      let addCount = 1;
+      let step = vals[1] - vals[0];
+      let lastVal = vals[vals.length - 1];
+      this.changeData(() => {
+        const { selector, styles, rows } = this;
+        for (let i = cellRange.sri; i <= cellRange.eri; i++) {
+          for (let j = cellRange.sci; j <= cellRange.eci; j++) {
+            let cell = helper.cloneDeep(srcCells[(addCount - 1) % srcCells.length]);
+
+            cell.text = lastVal + step * addCount;
+            addCount++;
+            rows.setCell(i, j, cell, what);
+          }
+        }
+      });
+    } else {
+      if (!canPaste.call(this, srcRange, cellRange, error)) return false;
+      this.changeData(() => {
+        copyPaste.call(this, srcRange, cellRange, what, true);
+      });
+    }
     return true;
   }
 

@@ -62,14 +62,8 @@ function selectorSet(multiple, ri, ci, indexesUpdated = true, moving = false) {
   if (ri === -1 && ci === -1) return;
   const { table, selector, toolbar, data, contextMenu } = this;
   const cell = data.getCell(ri, ci);
-  let selectCell = [];
-  let range = selector.range;
-  for (let i = range.sri; i <= range.eri; i++) {
-    for (let j = range.sci; j <= range.eci; j++) {
-      console.log(i, j);
-      selectCell.push(data.getCell(i, j));
-    }
-  }
+  let selectCell = data.getRangeCells(selector.range);
+
   if (multiple) {
     selector.setEnd(ri, ci, moving);
     this.trigger('cells-selected', cell, selector.range);
@@ -79,7 +73,6 @@ function selectorSet(multiple, ri, ci, indexesUpdated = true, moving = false) {
     this.trigger('cell-selected', cell, ri, ci);
   }
 
-  console.log(range, selectCell);
   contextMenu.setMode(ri === -1 || ci === -1 ? 'row-col' : 'range', selectCell);
 
   toolbar.reset();
