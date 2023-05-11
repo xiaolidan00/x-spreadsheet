@@ -535,21 +535,43 @@ export default class DataProxy {
     }
     //填充类容为数字类型
     if (count == srcCells.length) {
-      let addCount = 1;
-      let step = vals[1] - vals[0];
-      let lastVal = vals[vals.length - 1];
-      this.changeData(() => {
-        const { selector, styles, rows } = this;
-        for (let i = cellRange.sri; i <= cellRange.eri; i++) {
-          for (let j = cellRange.sci; j <= cellRange.eci; j++) {
-            let cell = helper.cloneDeep(srcCells[(addCount - 1) % srcCells.length]);
+      if (cellRange.sri == cellRange.eri || cellRange.sci == cellRange.eci) {
+        let addCount = 1;
+        let step = vals[1] - vals[0];
+        let lastVal = vals[vals.length - 1];
+        this.changeData(() => {
+          const { selector, styles, rows } = this;
 
-            cell.text = lastVal + step * addCount;
-            addCount++;
-            rows.setCell(i, j, cell, what);
+          for (let i = cellRange.sri; i <= cellRange.eri; i++) {
+            for (let j = cellRange.sci; j <= cellRange.eci; j++) {
+              let cell = helper.cloneDeep(srcCells[(addCount - 1) % srcCells.length]);
+
+              cell.text = lastVal + step * addCount;
+              addCount++;
+              rows.setCell(i, j, cell, what);
+            }
           }
-        }
-      });
+        });
+      } else {
+        let step = vals[1] - vals[0];
+        let r = 0;
+        this.changeData(() => {
+          const { selector, styles, rows } = this;
+
+          for (let i = cellRange.sri; i <= cellRange.eri; i++) {
+            let addCount = 1;
+            let lastVal = Number(r % srcCells.length) + step;
+            for (let j = cellRange.sci; j <= cellRange.eci; j++) {
+              let cell = helper.cloneDeep(srcCells[(addCount - 1) % srcCells.length]);
+
+              cell.text = lastVal + step * addCount;
+              addCount++;
+              rows.setCell(i, j, cell, what);
+            }
+            r++;
+          }
+        });
+      }
     } else {
       if (!canPaste.call(this, srcRange, cellRange, error)) return false;
       this.changeData(() => {
