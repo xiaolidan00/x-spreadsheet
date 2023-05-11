@@ -44,6 +44,7 @@
     "@babel/plugin-proposal-class-properties": "^7.4.4",
     "@babel/preset-env": "^7.3.4",
     "@babel/register": "^7.0.0",
+    "@babel/plugin-transform-classes",
     "babel-loader": "^8.0.5",
     "clean-webpack-plugin": "^0.1.19",
     "codecov": "^3.3.0",
