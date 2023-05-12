@@ -139,7 +139,7 @@ function copyPaste(srcCellRange, dstCellRange, what, autofill = false) {
     if (cell && cell.merge) {
       const [rn, cn] = cell.merge;
       if (rn <= 0 && cn <= 0) return;
-      console.log('merges');
+      console.log('copyPaste,merges');
       merges.add(new CellRange(ri, ci, ri + rn, ci + cn));
     }
   });
@@ -529,10 +529,15 @@ export default class DataProxy {
     let vals = [];
     for (let i = 0; i < srcCells.length; i++) {
       if (srcCells[i] && !Number.isNaN(Number(srcCells[i].text))) {
-        count++;
+        if (srcCells[i].merge) {
+          count += srcCells[i].merge.length;
+        } else {
+          count++;
+        }
         vals.push(Number(srcCells[i].text));
       }
     }
+    console.log('autofill', srcCells);
     //填充类容为数字类型
     if (count == srcCells.length) {
       if (cellRange.sri == cellRange.eri || cellRange.sci == cellRange.eci) {
@@ -563,10 +568,13 @@ export default class DataProxy {
             let lastVal = Number(r % srcCells.length) + step;
             for (let j = cellRange.sci; j <= cellRange.eci; j++) {
               let cell = helper.cloneDeep(srcCells[(addCount - 1) % srcCells.length]);
-
-              cell.text = lastVal + step * addCount;
-              addCount++;
-              rows.setCell(i, j, cell, what);
+              if (cell) {
+                cell.text = lastVal + step * addCount;
+                addCount++;
+                rows.setCell(i, j, cell, what);
+                if (cell.merge) {
+                }
+              }
             }
             r++;
           }
